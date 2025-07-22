@@ -1,0 +1,65 @@
+module {{ module_name }} (
+    input  [{{ N-1 }}:0] {{in_name_a}},
+    input  [{{ N-1 }}:0] {{in_name_b}},
+    output [{{ 2*N-1 }}:0] {{out_name_a}},
+    output [{{ 2*N-1 }}:0] {{out_name_b}},
+    output [{{ 2*N }}:0] {{out_final}}
+);
+// Generated at {{ timestamp }}
+
+{% for line in wires %}
+    wire {{line}};
+{%- endfor %}
+
+{% for line in h_adders %}
+    {{line}};
+{%- endfor %}
+
+{% for line in f_adders_io %}
+    {{line}};
+{%- endfor %}
+
+{% for line in f_adders %}
+    {{line}};
+{%- endfor %}
+
+    assign {{ out_name_a }} = {{result_a_v}};
+    assign {{ out_name_b }} = {{result_b_v}};
+
+    assign {{ out_final }} = {{ out_name_a }} + {{ out_name_b }};
+
+
+endmodule
+
+
+
+module full_adder(
+    input  a,
+    input  b,
+    input  cin,
+    output cout,
+    output sout
+);
+    assign {cout, sout} = a + b + cin;
+endmodule
+
+
+
+module half_adder(
+    input  a,
+    input  b,
+    output cout,
+    output sout
+);
+    assign {cout, sout} = a + b;
+endmodule
+
+module full_adder_io(
+    input  a,
+    input  b,
+    input  cin,
+    output cout,
+    output sout
+);
+    assign {cout, sout} = ~(a + b + cin);
+endmodule
